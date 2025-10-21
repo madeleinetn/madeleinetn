@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Erro 500 - Site de Eventos{% endblock %}
+{% block content %}
+<section class="card pad" role="alert" aria-live="assertive">
+  <div class="kicker">Código 500</div>
+  <h1 class="page-title">🚨 Erro interno do servidor</h1>
+  <p>Algo deu errado do nosso lado. Tente novamente em alguns instantes.</p>
+  <div class="form-actions" role="group" aria-label="Ações">
+    <a class="btn" href="{{ url_for('home') }}">🏠 Voltar para Home</a>
+    <button class="btn ghost" type="button" onclick="history.back()">↩️ Voltar</button>
+  </div>
+</section>
+{% endblock %}

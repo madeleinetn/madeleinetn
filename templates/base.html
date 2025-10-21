@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>{% block title %}Site de Eventos{% endblock %}</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --surface: #121933;
+      --elev: #1b2448;
+      --text: #e6ecff;
+      --muted: #a3b0d9;
+      --primary: #6ea8fe;
+      --primary-contrast: #0b1020;
+      --success-bg: #16361c;
+      --success-text: #9de4b1;
+      --error-bg: #3a1620;
+      --error-text: #ffb3c1;
+      --warning-bg: #3a2a16;
+      --warning-text: #ffd08a;
+      --radius: 12px;
+      --shadow: 0 8px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+      --ring: 0 0 0 3px rgba(110,168,254,.35);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f7fb;
+        --surface: #ffffff;
+        --elev: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --primary: #2563eb;
+        --primary-contrast: #ffffff;
+        --success-bg: #e8f7ee;
+        --success-text: #166534;
+        --error-bg: #fde8ec;
+        --error-text: #9f1239;
+        --warning-bg: #fff3d6;
+        --warning-text: #92400e;
+        --shadow: 0 8px 24px rgba(2, 6, 23, 0.08), inset 0 1px 0 rgba(255,255,255,.6);
+        --ring: 0 0 0 3px rgba(37, 99, 235, .25);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(110,168,254,.12), transparent),
+                  radial-gradient(1000px 600px at 110% 10%, rgba(180,160,255,.10), transparent),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100dvh;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; box-shadow: var(--ring); border-radius: 8px; }
+
+    .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { left: 16px; top: 16px; width: auto; height: auto; padding: 10px 14px; background: var(--primary); color: var(--primary-contrast); border-radius: 8px; z-index: 1000; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: saturate(120%) blur(10px);
+      background: color-mix(in oklab, var(--bg) 70%, transparent);
+      border-bottom: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+    }
+
+    .nav-wrap {
+      max-width: 1100px; margin: 0 auto; padding: 14px 20px;
+      display: flex; align-items: center; gap: 16px; justify-content: space-between;
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .2px; }
+    .logo { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), #a78bfa); box-shadow: inset 0 0 0 2px rgba(255,255,255,.2); }
+
+    .nav { display: flex; gap: 8px; align-items: center; }
+    .nav a, .nav button.link { color: var(--text); opacity: .9; padding: 8px 10px; border-radius: 8px; transition: background .2s ease, opacity .2s ease; }
+    .nav a:hover, .nav button.link:hover { background: color-mix(in oklab, var(--text) 8%, transparent); opacity: 1; }
+
+    .btn, button, input[type="submit"] {
+      --btn-bg: var(--primary);
+      --btn-fg: var(--primary-contrast);
+      appearance: none; border: none; cursor: pointer; font-weight: 600;
+      background: var(--btn-bg); color: var(--btn-fg);
+      padding: 10px 14px; border-radius: 10px; box-shadow: var(--shadow);
+      transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
+    }
+    .btn:hover { filter: brightness(1.05); }
+    .btn:active { transform: translateY(1px); }
+    .btn.ghost { background: transparent; color: var(--text); border: 1px solid color-mix(in oklab, var(--text) 16%, transparent); }
+    .btn.danger { --btn-bg: #e11d48; }
+    .btn.success { --btn-bg: #16a34a; }
+
+    main { max-width: 1100px; margin: 24px auto; padding: 0 20px; }
+
+    .card { background: color-mix(in oklab, var(--surface) 88%, transparent); border: 1px solid color-mix(in oklab, var(--text) 12%, transparent); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card.pad { padding: 20px; }
+
+    .grid { display: grid; gap: 16px; }
+    .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @media (max-width: 900px) { .grid.cols-3 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 700px) { .grid.cols-2, .grid.cols-3 { grid-template-columns: 1fr; } }
+
+    .muted { color: var(--muted); }
+
+    .alerts { display: grid; gap: 10px; margin: 16px 0; }
+    .alert { padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,.08); }
+    .alert.success { background: var(--success-bg); color: var(--success-text); }
+    .alert.error { background: var(--error-bg); color: var(--error-text); }
+    .alert.warning { background: var(--warning-bg); color: var(--warning-text); }
+
+    form .field { display: grid; gap: 6px; margin: 12px 0; }
+    label { font-weight: 600; }
+    input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid color-mix(in oklab, var(--text) 16%, transparent); background: var(--surface); color: var(--text); }
+    input::placeholder, textarea::placeholder { color: color-mix(in oklab, var(--text) 45%, transparent); }
+    .form-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+
+    .kicker { font-size: 14px; color: var(--muted); font-weight: 600; letter-spacing: .3px; text-transform: uppercase; }
+    .page-title { margin: 8px 0 14px; font-size: clamp(24px, 3vw, 34px); }
+
+    .event { border-left: 4px solid color-mix(in oklab, var(--primary) 70%, transparent); }
+    .event.estabelecimento { border-left-color: #16a34a; }
+    .event.usuario { border-left-color: var(--primary); }
+
+    footer { border-top: 1px solid color-mix(in oklab, var(--text) 12%, transparent); }
+    .footer-wrap { max-width: 1100px; margin: 0 auto; padding: 24px 20px; color: var(--muted); display: flex; gap: 12px; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+
+    .menu-toggle { display: none; }
+    @media (max-width: 760px) {
+      .menu-toggle { display: inline-flex; align-items: center; gap: 8px; }
+      .nav.primary { display: none; position: absolute; left: 0; right: 0; top: 56px; background: var(--surface); padding: 10px 16px; border-bottom: 1px solid color-mix(in oklab, var(--text) 12%, transparent); }
+      .nav.primary.open { display: grid; }
+    }
+  </style>
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <a href="#conteudo" class="skip-link">Ir para o conteúdo principal</a>
+
+  <header role="banner" aria-label="Cabeçalho principal">
+    <div class="nav-wrap">
+      <a class="brand" href="{{ url_for('home') }}" aria-label="Página inicial">
+        <span class="logo" aria-hidden="true"></span>
+        <span>Eventos</span>
+      </a>
+
+      <button class="btn ghost menu-toggle" aria-expanded="false" aria-controls="menu-principal" id="btnMenu">
+        ☰ <span class="sr-only">Abrir menu</span>
+      </button>
+
+      <nav class="nav primary" id="menu-principal" aria-label="Navegação principal">
+        <a href="{{ url_for('home') }}">Início</a>
+        <a href="{{ url_for('eventos.listar_eventos') }}">Eventos</a>
+        {% if session.get('usuario_id') %}
+          <a href="{{ url_for('eventos.criar_evento') }}">Criar evento</a>
+          {% if session.get('usuario_tipo') == 'estabelecimento' %}
+            <a href="{{ url_for('usuarios.perfil_estabelecimento') }}">Meu perfil</a>
+          {% else %}
+            <a href="{{ url_for('usuarios.perfil_usuario') }}">Meu perfil</a>
+          {% endif %}
+          <a href="{{ url_for('usuarios.logout') }}">Sair</a>
+        {% else %}
+          <a href="{{ url_for('usuarios.login') }}">Login</a>
+          <a href="{{ url_for('usuarios.registro') }}">Criar conta</a>
+        {% endif %}
+        <button class="btn ghost" id="themeToggle" type="button" aria-label="Alternar tema">🌓</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo" role="main">
+    <div class="alerts" aria-live="polite" aria-atomic="true">
+      {# Compatível com categorias e sem categorias #}
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% else %}
+          {% with messages2 = get_flashed_messages() %}
+            {% if messages2 %}
+              {% for message in messages2 %}
+                <div class="alert success">{{ message }}</div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <div class="footer-wrap">
+      <span class="muted">© Site de Eventos</span>
+      <span class="muted">Feito com ❤️ para a comunidade</span>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const btn = document.getElementById('btnMenu');
+      const menu = document.getElementById('menu-principal');
+      if (btn && menu) {
+        btn.addEventListener('click', () => {
+          const open = menu.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(open));
+        });
+      }
+
+      const themeToggle = document.getElementById('themeToggle');
+      const STORAGE_KEY = 'prefer-color-scheme';
+      const root = document.documentElement;
+      function applyTheme(mode) {
+        if (mode === 'light') {
+          root.style.colorScheme = 'light';
+          document.documentElement.classList.remove('dark');
+        } else {
+          root.style.colorScheme = 'dark';
+          document.documentElement.classList.add('dark');
+        }
+      }
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) applyTheme(saved);
+        themeToggle?.addEventListener('click', () => {
+          const current = localStorage.getItem(STORAGE_KEY) || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          const next = current === 'dark' ? 'light' : 'dark';
+          localStorage.setItem(STORAGE_KEY, next);
+          applyTheme(next);
+        });
+      } catch (_) {}
+    })();
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
