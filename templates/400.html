@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Erro 400 - Site de Eventos{% endblock %}
+{% block content %}
+<section class="card pad" role="alert" aria-live="assertive">
+  <div class="kicker">Código 400</div>
+  <h1 class="page-title">⚠️ Requisição inválida</h1>
+  <p>O servidor não conseguiu processar a requisição devido a um erro do cliente.</p>
+  <div class="form-actions" role="group" aria-label="Ações">
+    <a class="btn" href="{{ url_for('home') }}">🏠 Voltar para Home</a>
+    <button class="btn ghost" type="button" onclick="history.back()">↩️ Voltar</button>
+  </div>
+</section>
+{% endblock %}

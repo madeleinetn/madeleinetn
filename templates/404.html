@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Erro 404 - Site de Eventos{% endblock %}
+{% block content %}
+<section class="card pad" role="alert" aria-live="assertive">
+  <div class="kicker">Código 404</div>
+  <h1 class="page-title">🔍 Página não encontrada</h1>
+  <p>A página que você procura não existe, foi movida ou o endereço está incorreto.</p>
+  <div class="form-actions" role="group" aria-label="Ações">
+    <a class="btn" href="{{ url_for('home') }}">🏠 Voltar para Home</a>
+    <button class="btn ghost" type="button" onclick="history.back()">↩️ Voltar</button>
+  </div>
+</section>
+{% endblock %}
